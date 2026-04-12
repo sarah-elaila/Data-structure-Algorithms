@@ -22,11 +22,13 @@ private:
 
     Node* root;
 
+    // O(1)
     int height(Node* node) {
         if (node == nullptr) return -1;
         return node->height;
     }
 
+    // O(log n) average, O(n) worst
     Node* insert(Node* node, int value) {
         if (node == nullptr) {
             return new Node(value);
@@ -45,6 +47,7 @@ private:
         return node;
     }
 
+    // O(n)
     bool balanced(Node* node) {
         if (node == nullptr) return true;
 
@@ -53,6 +56,7 @@ private:
             && balanced(node->right);
     }
 
+    // O(n)
     void display(Node* node, string details) {
         if (node == nullptr) return;
 
@@ -62,40 +66,63 @@ private:
         display(node->right, "Right child of " + to_string(node->value) + " : ");
     }
 
+    // O(n)
+    void populateSorted(vector<int>& nums, int start, int end) {
+        if (start >= end) return;
+
+        int mid = (start + end) / 2;
+
+        insert(nums[mid]); // O(log n)
+
+        populateSorted(nums, start, mid);
+        populateSorted(nums, mid + 1, end);
+    }
+
 public:
     BST() {
         root = nullptr;
     }
 
+    // O(1)
     bool isEmpty() {
         return root == nullptr;
     }
 
+    // O(log n) average
     void insert(int value) {
         root = insert(root, value);
     }
 
+    // O(n)
     bool isBalanced() {
         return balanced(root);
     }
 
+    // O(n)
     void display() {
         display(root, "Root Node: ");
     }
 
+    // O(n log n)
     void populate(vector<int> nums) {
         for (int num : nums) {
-            insert(num);
+            insert(num); // each insert O(log n)
         }
+    }
+
+    // O(n log n)
+    void populateSorted(vector<int> nums) {
+        populateSorted(nums, 0, nums.size());
     }
 };
 
 int main() {
     BST tree;
 
-    vector<int> nums = {5, 20, 7, 1, 4, 13, 9, 8, 3, 30};
+    vector<int> nums = {1,2,3,4,5,6,7,8,9,10};
 
-    tree.populate(nums);
+    // This creates a BALANCED BST
+    tree.populateSorted(nums);
 
     tree.display();
 
